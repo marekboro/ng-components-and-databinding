@@ -1,4 +1,4 @@
-import { Component, OnInit , EventEmitter, Output} from '@angular/core';
+import { Component, OnInit , EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 
 
 @Component({
@@ -17,7 +17,8 @@ export class CockpitComponent implements OnInit {
   // @Output('bpCreated') blueprintCreated = new EventEmitter<{Template}>();
   
   // newServerName = '';
-  newServerContent = '';
+  // newServerContent = '';
+  @ViewChild('serverContentInput',{static:true}) serverContentInput :ElementRef;
 
   constructor() { }
 
@@ -25,21 +26,43 @@ export class CockpitComponent implements OnInit {
   }
 
   onAddServer(nameInput:HTMLInputElement) {
-    // console.log(nameInput.value)
+    console.log(this.serverContentInput)
     this.serverCreated.emit({
-    // serverName:this.newServerName,
-    serverName: nameInput.value,
-    serverContent:this.newServerContent
-    });
-    // this.serverCreated.emit({Template:{serverName:this.newServerName,serverContent:this.newServerContent}});
-  }
+      serverName: nameInput.value,
+      serverContent:this.serverContentInput.nativeElement.value});
+    };
+    
+  
+  // onAddServer(nameInput:HTMLInputElement) {
+  //   // console.log(nameInput.value)
+  //   this.serverCreated.emit({
+  //   // serverName:this.newServerName,
+  //   serverName: nameInput.value,
+  //   serverContent:this.newServerContent
+  //   });
+  //   // this.serverCreated.emit({Template:{serverName:this.newServerName,serverContent:this.newServerContent}});
+  // }
 
   onAddBlueprint(nameInput:HTMLInputElement) {
    this.blueprintCreated.emit({
     //  serverName:this.newServerName,
      serverName:nameInput.value,
-     serverContent:this.newServerContent});
+     serverContent:this.serverContentInput.nativeElement.value});
   //  this.blueprintCreated.emit({Template:{serverName:this.newServerName,serverContent:this.newServerContent}});
   }
 
 }
+
+
+/** 
+   * @ViewChild('serverContentInput') serverContentInput: ElementRef; //! OLD !!!
+   * 
+   * @ViewChild('serverContentInput', {static: true}) serverContentInput: ElementRef;  //! NEW!!!!
+   * 
+   * The same change (add { static: true } as a second argument) needs to be applied to ALL usages of @ViewChild() (and also @ContentChild() which you'll learn about later) IF you plan on accessing the selected element inside of ngOnInit().
+
+    If you DON'T access the selected element in ngOnInit (but anywhere else in your component), set static: false instead!
+
+    If you're using Angular 9+, you only need to add { static: true } (if needed) but not { static: false }.
+   * 
+  */
